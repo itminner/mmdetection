@@ -63,3 +63,22 @@ def show_result(img, result, dataset='coco', score_thr=0.3):
         labels,
         class_names=class_names,
         score_thr=score_thr)
+
+def show_result2(img, result, is_show=False, out_file=None, dataset='coco', score_thr=0.3):
+    class_names = get_classes(dataset)
+    labels = [
+        np.full(bbox.shape[0], i, dtype=np.int32)
+        for i, bbox in enumerate(result)
+    ]
+    labels = np.concatenate(labels)
+    bboxes = np.vstack(result)
+    img = mmcv.imread(img)
+    
+    mmcv.imshow_det_bboxes(
+        img.copy(),
+        bboxes,
+        labels,
+        class_names=class_names,
+        score_thr=score_thr,
+        show=is_show,
+        out_file=out_file)
