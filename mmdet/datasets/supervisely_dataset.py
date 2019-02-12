@@ -1,6 +1,4 @@
 import numpy as np
-from pycocotools.coco import COCO
-
 from torch.utils.data import Dataset
 import json
 
