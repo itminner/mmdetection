@@ -1,9 +1,9 @@
 import numpy as np
-from torch.utils.data import Dataset
+from .custom import CustomDataset
 import json
 
 
-class SuperviselyAICourtDataset(Dataset):
+class SuperviselyAICourtDataset(CustomDataset):
     LABEL_DICT = {'person': 0, 'head': 1, 'tabel_card': 2, 'useless': 3}
 
     def load_annotations(self, ann_file):
