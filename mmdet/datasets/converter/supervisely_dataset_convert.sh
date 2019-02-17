@@ -1,1 +1,1 @@
-python supervisely_dataset_convert.py /Users/tianfei01/Downloads/datarelease1 /Users/tianfei01/Downloads/datarelease1_mmdet  
+python supervisely_dataset_convert.py /dev/ftian_disk/tianfei01/workspace/deeplearn/train_data/dilili_data/datarelease1/ /dev/ftian_disk/tianfei01/workspace/deeplearn/train_data/dilili_data/datarelease1_mmdet_new

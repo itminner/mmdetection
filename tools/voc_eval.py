@@ -16,7 +16,7 @@ def voc_eval(result_file, dataset, iou_thr=0.5):
         ann = dataset.get_ann_info(i)
         bboxes = ann['bboxes']
         labels = ann['labels']
-        if 'bboxes_ignore' in ann:
+        if 'bboxes_ignore' in ann and 'labels_ignore' in ann:
             ignore = np.concatenate([
                 np.zeros(bboxes.shape[0], dtype=np.bool),
                 np.ones(ann['bboxes_ignore'].shape[0], dtype=np.bool)
@@ -32,6 +32,12 @@ def voc_eval(result_file, dataset, iou_thr=0.5):
         dataset_name = 'voc07'
     else:
         dataset_name = dataset.CLASSES
+    print("len(gt_bboxes): ", len(gt_bboxes))
+    print("len(gt_labels): ", len(gt_labels))
+    print("len(gt_ignore): ", len(gt_ignore))
+    print(gt_bboxes[0])
+    print(gt_labels[0])
+    #print(gt_ignore)
     eval_map(
         det_results,
         gt_bboxes,

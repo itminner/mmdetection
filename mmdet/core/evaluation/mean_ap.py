@@ -241,6 +241,7 @@ def eval_map(det_results,
     Returns:
         tuple: (mAP, [dict, dict, ...])
     """
+    print(det_results[0])
     assert len(det_results) == len(gt_bboxes) == len(gt_labels)
     if gt_ignore is not None:
         assert len(gt_ignore) == len(gt_labels)
@@ -285,9 +286,17 @@ def eval_map(det_results,
         sort_inds = np.argsort(-cls_dets[:, -1])
         tp = np.hstack(tp)[:, sort_inds]
         fp = np.hstack(fp)[:, sort_inds]
+        #print("tp---")
+        #print(tp)
+        #print("fp----")
+        #print(fp)
         # calculate recall and precision with tp and fp
         tp = np.cumsum(tp, axis=1)
         fp = np.cumsum(fp, axis=1)
+        print("after cumsum")
+        print(tp)
+        print("fp")
+        print(fp)
         eps = np.finfo(np.float32).eps
         recalls = tp / np.maximum(num_gts[:, np.newaxis], eps)
         precisions = tp / np.maximum((tp + fp), eps)
@@ -298,6 +307,10 @@ def eval_map(det_results,
             num_gts = num_gts.item()
         mode = 'area' if dataset != 'voc07' else '11points'
         ap = average_precision(recalls, precisions, mode)
+        print("precisions-----------")
+        #print(precisions)
+        print("recalls-----------")
+        #print(recalls)
         eval_results.append({
             'num_gts': num_gts,
             'num_dets': num_dets,

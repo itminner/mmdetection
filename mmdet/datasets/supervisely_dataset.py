@@ -11,8 +11,7 @@ class SuperviselyAICourtDataset(CustomDataset):
         ann_json = json.load(ann_f)
 
         img_infoes = []
-        for i in len(ann_json):
-            info = ann_json[i]
+        for info in ann_json:
             img_infoes.append(info)
         return img_infoes
 
@@ -45,24 +44,35 @@ class SuperviselyAICourtDataset(CustomDataset):
         gt_bboxes = []
         gt_labels = []
         gt_bboxes_ignore = []
+        gt_labels_ignore = []
         # Two formats are provided.
         # 1. mask: a binary map of the same size of the image.
         # 2. polys: each mask consists of one or several polys, each poly is a
         # list of float.
-        for i, ann in enumerate(ann_info):
-            if ann.get('ignore', False):
+        ann = ann_info['ann']
+        #if ann.get('ignore', False):
+        #    continue
+        print("------------------")
+        print(ann)
+        for lt_x, lt_y, w, h, lab in zip(*[iter(ann['bboxes'])] * 4, ann['labels']):
+            lt_x = int(lt_x)
+            lt_y = int(lt_y)
+            h = int(h)
+            w = int(w)
+            if w < 1 or h < 1:
                 continue
+            bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
+            gt_bboxes.append(bbox)
+            gt_labels.append(lab)
 
-            for lt_x, lt_y, w, h, lab in zip(*[iter(ann['bboxes'])] * 4, ann['labels']):
-                if w < 1 or h < 1:
-                    continue
-                bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
-                gt_bboxes.append(bbox)
-                gt_labels.append(lab)
-
-            for lt_x, lt_y, w, h in zip(*[ann['bboxes_ignore']]):
-                bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
-                gt_bboxes_ignore.append(bbox)
+        for lt_x, lt_y, w, h, lab in zip(*[iter(ann['bboxes_ignore'])] * 4, ann['labels_ignore']):
+            lt_x = int(lt_x)
+            lt_y = int(lt_y)
+            h = int(h)
+            w = int(w)
+            bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
+            gt_bboxes_ignore.append(bbox)
+            gt_labels_ignore.append(lab)
 
         if gt_bboxes:
             gt_bboxes = np.array(gt_bboxes, dtype=np.float32)
@@ -77,5 +87,5 @@ class SuperviselyAICourtDataset(CustomDataset):
             gt_bboxes_ignore = np.zeros((0, 4), dtype=np.float32)
 
         ann = dict(
-            bboxes=gt_bboxes, labels=gt_labels, bboxes_ignore=gt_bboxes_ignore)
+            bboxes=gt_bboxes, labels=gt_labels, bboxes_ignore=gt_bboxes_ignore,labels_ignore=gt_labels_ignore)
         return ann

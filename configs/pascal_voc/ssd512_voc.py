@@ -2,7 +2,7 @@
 input_size = 512
 model = dict(
     type='SingleStageDetector',
-    pretrained='open-mmlab://vgg16_caffe',
+    pretrained='/dev/ftian_disk/tianfei01/workspace/deeplearn/pretrain_model/pytorch/backbone/vgg16_caffe-292e1171.pth',
     backbone=dict(
         type='SSDVGG',
         input_size=input_size,
@@ -45,7 +45,7 @@ test_cfg = dict(
 # model training and testing settings
 # dataset settings
 dataset_type = 'VOCDataset'
-data_root = 'data/VOCdevkit/'
+data_root = '/dev/ftian_disk/tianfei01/workspace/deeplearn/train_data/detect/VOCdevkit/'
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[1, 1, 1], to_rgb=True)
 data = dict(
     imgs_per_gpu=4,
@@ -83,8 +83,8 @@ data = dict(
             resize_keep_ratio=False)),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'VOC2007_test/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'VOC2007_test/',
         img_scale=(512, 512),
         img_norm_cfg=img_norm_cfg,
         size_divisor=None,
@@ -95,8 +95,8 @@ data = dict(
         resize_keep_ratio=False),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'VOC2007_test/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'VOC2007_test/',
         img_scale=(512, 512),
         img_norm_cfg=img_norm_cfg,
         size_divisor=None,

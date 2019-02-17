@@ -8,6 +8,11 @@ def voc_classes():
         'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor'
     ]
 
+def aicourt_classes():
+    return [
+        'person', 'head', 'table_card', 'useless'
+    ]
+
 
 def imagenet_det_classes():
     return [
@@ -82,7 +87,8 @@ dataset_aliases = {
     'voc': ['voc', 'pascal_voc', 'voc07', 'voc12'],
     'imagenet_det': ['det', 'imagenet_det', 'ilsvrc_det'],
     'imagenet_vid': ['vid', 'imagenet_vid', 'ilsvrc_vid'],
-    'coco': ['coco', 'mscoco', 'ms_coco']
+    'coco': ['coco', 'mscoco', 'ms_coco'],
+    'aicourt': ['aicourt']
 }
 
 

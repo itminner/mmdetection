@@ -69,10 +69,13 @@ class SuperviselyDatasetConverter(DatasetConverter):
         bboxes = []
         bboxes_ignore = []
         labels = []
+        labels_ignore = []
         ann = {}
+        ann['filename'] = img_filename
         ann['bboxes'] = bboxes
         ann['labels'] = labels
         ann['bboxes_ignore'] = bboxes_ignore
+        ann['labels_ignore'] = labels_ignore
 
         objects = origin_json['objects']
         for ann_obj in objects:
@@ -86,12 +89,13 @@ class SuperviselyDatasetConverter(DatasetConverter):
             label_txt = ann_obj['classTitle']
 
             if label_txt != 'useless':
-                bboxes.extend((lt_x, lt_y, rb_x - lt_x, rb_y - lt_y))
+                bboxes.extend((lt_x, lt_y, rb_x, rb_y))
                 if label_txt not in SuperviselyDatasetConverter.LABEL_DICT.keys():
                     print("unrecognize class title: ", label_txt)
                 labels.append(SuperviselyDatasetConverter.LABEL_DICT[label_txt])
             else:
-                bboxes_ignore.extend((lt_x, lt_y, rb_x - lt_x, rb_y - lt_y))
+                bboxes_ignore.extend((lt_x, lt_y, rb_x, rb_y))
+                labels_ignore.append(SuperviselyDatasetConverter.LABEL_DICT['useless'])
         ann_item['ann'] = ann
 
         self.total_img_num += 1
