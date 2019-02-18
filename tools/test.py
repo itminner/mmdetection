@@ -11,7 +11,7 @@ from mmdet.datasets import build_dataloader
 from mmdet.models import build_detector, detectors
 
 
-def single_test(model, data_loader, show=False):
+def single_test(model, data_loader, show=True):
     model.eval()
     results = []
     dataset = data_loader.dataset
@@ -87,7 +87,7 @@ def main():
             num_gpus=1,
             dist=False,
             shuffle=False)
-        outputs = single_test(model, data_loader, args.show)
+        outputs = single_test(model, data_loader, True)#args.show)
     else:
         model_args = cfg.model.copy()
         model_args.update(train_cfg=None, test_cfg=cfg.test_cfg)

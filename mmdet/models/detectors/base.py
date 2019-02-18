@@ -126,10 +126,12 @@ class BaseDetector(nn.Module):
                 for i, bbox in enumerate(bbox_result)
             ]
             labels = np.concatenate(labels)
+            print("___________________")
             mmcv.imshow_det_bboxes(
                 img_show,
                 bboxes,
                 labels,
+                show=False,
                 class_names=class_names,
                 score_thr=score_thr,
-                out_file = './base_detector_out.png')
+                out_file = '~/base_detector_out.png')
