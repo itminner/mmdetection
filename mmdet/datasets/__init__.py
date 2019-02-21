@@ -8,10 +8,11 @@ from .concat_dataset import ConcatDataset
 from .repeat_dataset import RepeatDataset
 from .extra_aug import ExtraAugmentation
 from .supervisely_dataset import SuperviselyAICourtDataset
+from .coco_person import CocoPersonDataset
 
 __all__ = [
     'CustomDataset', 'XMLDataset', 'CocoDataset', 'VOCDataset', 'GroupSampler',
     'DistributedGroupSampler', 'build_dataloader', 'to_tensor', 'random_scale',
     'show_ann', 'get_dataset', 'ConcatDataset', 'RepeatDataset',
-    'ExtraAugmentation', 'SuperviselyAICourtDataset'
+    'ExtraAugmentation', 'SuperviselyAICourtDataset', 'CocoPersonDataset'
 ]

@@ -1,6 +1,7 @@
 import numpy as np
 from terminaltables import AsciiTable
 
+from pudb import set_trace; set_trace()
 from .bbox_overlaps import bbox_overlaps
 from .class_names import get_classes
 
@@ -206,13 +207,19 @@ def get_cls_results(det_results, gt_bboxes, gt_labels, gt_ignore, class_id):
     cls_gt_ignore = []
     for j in range(len(gt_bboxes)):
         gt_bbox = gt_bboxes[j]
-        cls_inds = (gt_labels[j] == class_id + 1)
+        #cls_inds = (gt_labels[j] == class_id + 1)
+        cls_inds = (gt_labels[j] == class_id)
         cls_gt = gt_bbox[cls_inds, :] if gt_bbox.shape[0] > 0 else gt_bbox
         cls_gts.append(cls_gt)
         if gt_ignore is None:
             cls_gt_ignore.append(np.zeros(cls_gt.shape[0], dtype=np.int32))
         else:
             cls_gt_ignore.append(gt_ignore[j][cls_inds])
+    for i in range(len(cls_dets)):
+        for j in range(len(cls_dets[i])-1,-1,-1):
+            if cls_dets[i][j][4] < 0.3:
+                cls_dets[i]=np.delete(cls_dets[i], j, axis=0)
+        
     return cls_dets, cls_gts, cls_gt_ignore
 
 
@@ -374,7 +381,7 @@ def print_map_summary(mean_ap, results, dataset=None):
     header = ['class', 'gts', 'dets', 'recall', 'precision', 'ap']
     for i in range(num_scales):
         table_data = [header]
-        for j in range(num_classes):
+        for j in range(3):#range(num_classes):
             row_data = [
                 label_names[j], num_gts[i, j], results[j]['num_dets'],
                 '{:.3f}'.format(recalls[i, j]), '{:.3f}'.format(

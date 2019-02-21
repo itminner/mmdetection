@@ -13,6 +13,7 @@ class BaseDetector(nn.Module):
     """Base class for detectors"""
 
     __metaclass__ = ABCMeta
+    debug_out_index=0
 
     def __init__(self):
         super(BaseDetector, self).__init__()
@@ -126,12 +127,13 @@ class BaseDetector(nn.Module):
                 for i, bbox in enumerate(bbox_result)
             ]
             labels = np.concatenate(labels)
-            print("___________________")
+            #print("___________________")
             mmcv.imshow_det_bboxes(
                 img_show,
                 bboxes,
                 labels,
                 show=False,
                 class_names=class_names,
-                score_thr=score_thr,
-                out_file = '~/base_detector_out.png')
+                score_thr=score_thr)
+                #out_file = '~/base_detector_out_' + str(self.debug_out_index) + '.png')
+            self.debug_out_index += 1

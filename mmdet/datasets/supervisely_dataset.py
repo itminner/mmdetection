@@ -54,23 +54,23 @@ class SuperviselyAICourtDataset(CustomDataset):
         #    continue
         print("------------------")
         print(ann)
-        for lt_x, lt_y, w, h, lab in zip(*[iter(ann['bboxes'])] * 4, ann['labels']):
+        for lt_x, lt_y, rb_x, rb_y, lab in zip(*[iter(ann['bboxes'])] * 4, ann['labels']):
             lt_x = int(lt_x)
             lt_y = int(lt_y)
-            h = int(h)
-            w = int(w)
-            if w < 1 or h < 1:
+            rb_x = int(rb_x)
+            rb_y = int(rb_y)
+            if lt_x > rb_x or lt_y > rb_y:
                 continue
-            bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
+            bbox = [lt_x, lt_y, rb_x, rb_y]
             gt_bboxes.append(bbox)
             gt_labels.append(lab)
 
-        for lt_x, lt_y, w, h, lab in zip(*[iter(ann['bboxes_ignore'])] * 4, ann['labels_ignore']):
+        for lt_x, lt_y, rb_x, rb_y, lab in zip(*[iter(ann['bboxes_ignore'])] * 4, ann['labels_ignore']):
             lt_x = int(lt_x)
             lt_y = int(lt_y)
-            h = int(h)
-            w = int(w)
-            bbox = [lt_x, lt_y, lt_x + w - 1, lt_y + h - 1]
+            rb_x = int(rb_x)
+            rb_y = int(rb_y)
+            bbox = [lt_x, lt_y, rb_x, rb_y]
             gt_bboxes_ignore.append(bbox)
             gt_labels_ignore.append(lab)
 
@@ -87,5 +87,5 @@ class SuperviselyAICourtDataset(CustomDataset):
             gt_bboxes_ignore = np.zeros((0, 4), dtype=np.float32)
 
         ann = dict(
-            bboxes=gt_bboxes, labels=gt_labels, bboxes_ignore=gt_bboxes_ignore,labels_ignore=gt_labels_ignore)
+            bboxes=gt_bboxes, labels=gt_labels, bboxes_ignore=gt_bboxes_ignore,labels_ignore=gt_labels_ignore, filename=ann['filename'], width=ann_info['width'], height=ann_info['height'])
         return ann

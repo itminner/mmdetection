@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from pudb import set_trace; set_trace()
 
 import mmcv
 import numpy as np
@@ -7,7 +8,7 @@ from mmdet import datasets
 from mmdet.core import eval_map
 
 
-def voc_eval(result_file, dataset, iou_thr=0.5):
+def voc_eval(result_file, dataset, test_cfg, iou_thr=0.5):
     det_results = mmcv.load(result_file)
     gt_bboxes = []
     gt_labels = []
@@ -15,7 +16,8 @@ def voc_eval(result_file, dataset, iou_thr=0.5):
     for i in range(len(dataset)):
         ann = dataset.get_ann_info(i)
         #print(ann.keys())
-        #print(ann['filename'])
+        print(ann['filename'])
+        filename=ann['filename']
         bboxes = ann['bboxes']
         labels = ann['labels']
         #print("bboxes----")
@@ -30,6 +32,17 @@ def voc_eval(result_file, dataset, iou_thr=0.5):
             labels = np.concatenate([labels, ann['labels_ignore']])
         gt_bboxes.append(bboxes)
         gt_labels.append(labels)
+
+        # resize back
+        for class_id in range(len(det_results[i])):
+            det_bboxes = det_results[i][class_id]
+            det_bboxes[:,0]=det_bboxes[:,0]/512.0 * ann['height']
+            det_bboxes[:,1]=det_bboxes[:,1]/512.0 * ann['width']
+            det_bboxes[:,2]=det_bboxes[:,2]/512.0 * ann['height']
+            det_bboxes[:,3]=det_bboxes[:,3]/512.0 * ann['width']
+            det_results[i][class_id] = det_bboxes
+            
+     
     if not gt_ignore:
         gt_ignore = gt_ignore
     
@@ -61,7 +74,7 @@ def main():
     args = parser.parse_args()
     cfg = mmcv.Config.fromfile(args.config)
     test_dataset = mmcv.runner.obj_from_dict(cfg.data.test, datasets)
-    voc_eval(args.result, test_dataset, args.iou_thr)
+    voc_eval(args.result, test_dataset, cfg.data.test, iou_thr=args.iou_thr)
 
 
 if __name__ == '__main__':
