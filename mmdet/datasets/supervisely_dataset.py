@@ -5,6 +5,7 @@ import json
 
 class SuperviselyAICourtDataset(CustomDataset):
     LABEL_DICT = {'person': 0, 'head': 1, 'tabel_card': 2, 'useless': 3}
+    CLASSES = LABEL_DICT.keys()
 
     def load_annotations(self, ann_file):
         ann_f = open(ann_file, encoding='utf-8')

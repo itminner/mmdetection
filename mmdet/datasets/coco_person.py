@@ -6,8 +6,9 @@ from .coco import CocoDataset
 
 
 class CocoPersonDataset(CocoDataset):
-
-    CLASSES = ('person')
+    LABEL_DICT = {'person': 0}
+    CLASSES = LABEL_DICT.keys()
+    PERSON_CAT_ID = 1
 
     def load_annotations(self, ann_file):
         self.coco = COCO(ann_file)
@@ -64,6 +65,9 @@ class CocoPersonDataset(CocoDataset):
             gt_mask_polys = []
             gt_poly_lens = []
         for i, ann in enumerate(ann_info):
+            if ann['category_id'] != self.PERSON_CAT_ID:
+                continue
+
             if ann.get('ignore', False):
                 continue
             x1, y1, w, h = ann['bbox']

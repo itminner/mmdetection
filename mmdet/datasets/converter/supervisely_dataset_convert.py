@@ -42,7 +42,7 @@ class DatasetConverter(object):
 
 class SuperviselyDatasetConverter(DatasetConverter):
     IMAGE_FORMATS = ('bmp', 'jpg', 'bmp', 'png')
-    LABEL_DICT = {'person': 0, 'head': 1, 'tabel_card': 2, 'useless': 3}
+    LABEL_DICT = {'person': 1, 'head': 2, 'tabel_card': 3, 'useless': 4}
     total_img_num = 0
 
     def get_image_name_by_ann_file_path(self, ann_file_name, img_dir_path):
@@ -62,8 +62,8 @@ class SuperviselyDatasetConverter(DatasetConverter):
 
         # image size
         img_size = origin_json['size']
-        ann_item['width'] = img_size['height']
-        ann_item['height'] = img_size['width']
+        ann_item['width'] = img_size['width']
+        ann_item['height'] = img_size['height']
 
         # objects
         bboxes = []

@@ -8,7 +8,7 @@ from mmdet import datasets
 from mmdet.core import eval_map
 
 
-def voc_eval(result_file, dataset, test_cfg, iou_thr=0.5):
+def voc_eval(result_file, dataset, cfg, iou_thr=0.5):
     det_results = mmcv.load(result_file)
     gt_bboxes = []
     gt_labels = []
@@ -36,10 +36,10 @@ def voc_eval(result_file, dataset, test_cfg, iou_thr=0.5):
         # resize back
         for class_id in range(len(det_results[i])):
             det_bboxes = det_results[i][class_id]
-            det_bboxes[:,0]=det_bboxes[:,0]/512.0 * ann['height']
-            det_bboxes[:,1]=det_bboxes[:,1]/512.0 * ann['width']
-            det_bboxes[:,2]=det_bboxes[:,2]/512.0 * ann['height']
-            det_bboxes[:,3]=det_bboxes[:,3]/512.0 * ann['width']
+            det_bboxes[:,0]=det_bboxes[:,0]/cfg.input_size * ann['width']
+            det_bboxes[:,1]=det_bboxes[:,1]/cfg.input_size * ann['height']
+            det_bboxes[:,2]=det_bboxes[:,2]/cfg.input_size * ann['width']
+            det_bboxes[:,3]=det_bboxes[:,3]/cfg.input_size * ann['height']
             det_results[i][class_id] = det_bboxes
             
      
@@ -74,7 +74,7 @@ def main():
     args = parser.parse_args()
     cfg = mmcv.Config.fromfile(args.config)
     test_dataset = mmcv.runner.obj_from_dict(cfg.data.test, datasets)
-    voc_eval(args.result, test_dataset, cfg.data.test, iou_thr=args.iou_thr)
+    voc_eval(args.result, test_dataset, cfg, iou_thr=args.iou_thr)
 
 
 if __name__ == '__main__':

@@ -199,7 +199,7 @@ def tpfp_default(det_bboxes, gt_bboxes, gt_ignore, iou_thr, area_ranges=None):
     return tp, fp
 
 
-def get_cls_results(det_results, gt_bboxes, gt_labels, gt_ignore, class_id):
+def get_cls_results(det_results, gt_bboxes, gt_labels, gt_ignore, class_id, score_thr=0.0):
     """Get det results and gt information of a certain class."""
     cls_dets = [det[class_id]
                 for det in det_results]  # det bboxes of this class
@@ -207,8 +207,7 @@ def get_cls_results(det_results, gt_bboxes, gt_labels, gt_ignore, class_id):
     cls_gt_ignore = []
     for j in range(len(gt_bboxes)):
         gt_bbox = gt_bboxes[j]
-        #cls_inds = (gt_labels[j] == class_id + 1)
-        cls_inds = (gt_labels[j] == class_id)
+        cls_inds = (gt_labels[j] == class_id + 1)
         cls_gt = gt_bbox[cls_inds, :] if gt_bbox.shape[0] > 0 else gt_bbox
         cls_gts.append(cls_gt)
         if gt_ignore is None:
@@ -217,7 +216,7 @@ def get_cls_results(det_results, gt_bboxes, gt_labels, gt_ignore, class_id):
             cls_gt_ignore.append(gt_ignore[j][cls_inds])
     for i in range(len(cls_dets)):
         for j in range(len(cls_dets[i])-1,-1,-1):
-            if cls_dets[i][j][4] < 0.3:
+            if cls_dets[i][j][4] < score_thr:
                 cls_dets[i]=np.delete(cls_dets[i], j, axis=0)
         
     return cls_dets, cls_gts, cls_gt_ignore
