@@ -78,6 +78,9 @@ def get_dataset(data_cfg):
     if data_cfg['type'] == 'RepeatDataset':
         return RepeatDataset(
             get_dataset(data_cfg['dataset']), data_cfg['times'])
+    if data_cfg['type'] == "ConcatDataset":
+        return RepeatDataset(
+            get_dataset(data_cfg['datasets']))
 
     if isinstance(data_cfg['ann_file'], (list, tuple)):
         ann_files = data_cfg['ann_file']
